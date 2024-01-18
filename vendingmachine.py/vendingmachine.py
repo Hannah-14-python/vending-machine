@@ -70,12 +70,33 @@ class VendingMachine:
         self.purchase_history.append(item)
 
     def suggest_purchase(self):
-        if self.current_order:
-            last_purchase = self.current_order[-1]['item']
+        if len(self.purchase_history) >= 2:
+            last_purchase = self.purchase_history[-1]
+            second_last_purchase = self.purchase_history[-2]
 
-            # Basic suggestion rule: If a hot drink is purchased, suggest a snack
-            if any(item in last_purchase.lower() for item in ['espresso', 'cappuccino']):
-                print("\nWould you like to add a snack? We recommend trying our biscuits!")
+            # Dynamic suggestion based on the user's purchase history
+            if last_purchase in ['Espresso', 'Cappuccino', 'Latte'] and second_last_purchase in ['Biscuits', 'Cookies']:
+                print(f"\nHow about trying our {self.get_complementary_snack(last_purchase)} to go with your {last_purchase.lower()}?")
+            elif last_purchase in ['Biscuits', 'Cookies'] and second_last_purchase in ['Espresso', 'Cappuccino', 'Latte']:
+                print(f"\nEnjoy your {last_purchase.lower()}! You might also like our {self.get_complementary_hot_drink(last_purchase)}.")
+
+    def get_complementary_snack(self, hot_drink):
+        # Returns a complementary snack based on the type of hot drink purchased
+        if hot_drink.lower() == 'espresso':
+            return 'Biscuits'
+        elif hot_drink.lower() == 'cappuccino':
+            return 'Cookies'
+        elif hot_drink.lower() == 'latte':
+            return 'Chocolate Bar'
+
+    def get_complementary_hot_drink(self, snack):
+        # Returns a complementary hot drink based on the type of snack purchased
+        if snack.lower() == 'biscuits':
+            return 'Espresso'
+        elif snack.lower() == 'cookies':
+            return 'Cappuccino'
+        elif snack.lower() == 'chocolate bar':
+            return 'Latte'
 
     def view_current_order(self):
         if self.current_order:
